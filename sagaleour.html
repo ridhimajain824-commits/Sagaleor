@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5" />
+  <title>SagaLeor · AI Fashion Identity</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- custom style overrides + base -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #f8f7f4; color: #111827; }
+    h1, h2, h3, h4, .font-serif { font-family: 'Playfair Display', serif; }
+    .glass-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3); }
+    .text-gold { color: #d4af37; }
+    .border-gold { border-color: #d4af37; }
+    .bg-gold { background: #d4af37; }
+    .hover-glow:hover { box-shadow: 0 20px 40px -12px rgba(212, 175, 55, 0.25); transform: translateY(-6px); transition: all 0.25s ease; }
+    .card-lift { transition: all 0.3s cubic-bezier(0.2, 0, 0, 1); }
+    .card-lift:hover { transform: translateY(-10px) scale(1.01); box-shadow: 0 30px 50px -20px rgba(0,0,0,0.15); }
+    .floating { animation: float 6s ease-in-out infinite; }
+    @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
+    .fade-up { opacity: 0; transform: translateY(30px); transition: all 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .scale-in { opacity: 0; transform: scale(0.95); transition: all 0.6s ease; }
+    .scale-in.visible { opacity: 1; transform: scale(1); }
+    .nav-blur { background: rgba(248, 247, 244, 0.7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(0,0,0,0.02); }
+    .nav-solid { background: #f8f7f4; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+    .ripple-btn { position: relative; overflow: hidden; transition: all 0.2s; }
+    .ripple-btn::after { content: ''; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4); width: 100px; height: 100px; margin-top: -50px; margin-left: -50px; top: 50%; left: 50%; transform: scale(0); opacity: 1; pointer-events: none; }
+    .ripple-btn:active::after { transform: scale(4); opacity: 0; transition: 0.5s; }
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f0ec; }
+    ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 12px; }
+  </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+  <!-- ===== NAVBAR ===== -->
+  <header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-3 px-6 md:px-10 nav-blur">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl font-serif font-bold tracking-tight text-black">SagaLeor</span>
+        <span class="text-gold text-2xl font-serif">·</span>
+      </div>
+      <!-- desktop nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-[#1f1f1f]">
+        <a href="#how-it-works" class="hover:text-gold transition">How it Works</a>
+        <a href="#features" class="hover:text-gold transition">Features</a>
+        <a href="#pricing" class="hover:text-gold transition">Pricing</a>
+        <a href="#about" class="hover:text-gold transition">About</a>
+        <a href="#login" class="hover:text-gold transition">Login</a>
+        <a href="#cta" class="bg-black text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-gold hover:text-black transition-all ripple-btn">Get Started</a>
+      </nav>
+      <!-- mobile hamburger -->
+      <button id="menuToggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="menu">
+        <span class="block w-6 h-0.5 bg-black transition-all"></span>
+        <span class="block w-6 h-0.5 bg-black transition-all"></span>
+        <span class="block w-6 h-0.5 bg-black transition-all"></span>
+      </button>
+    </div>
+    <!-- mobile menu -->
+    <div id="mobileMenu" class="md:hidden hidden flex-col bg-white/90 backdrop-blur-xl mt-3 rounded-2xl p-6 gap-5 text-base font-medium shadow-xl border border-white/30">
+      <a href="#how-it-works" class="hover:text-gold">How it Works</a>
+      <a href="#features" class="hover:text-gold">Features</a>
+      <a href="#pricing" class="hover:text-gold">Pricing</a>
+      <a href="#about" class="hover:text-gold">About</a>
+      <a href="#login" class="hover:text-gold">Login</a>
+      <a href="#cta" class="bg-black text-white px-6 py-3 rounded-full text-center hover:bg-gold hover:text-black transition">Get Started</a>
+    </div>
+  </header>
+
+  <main class="pt-24 md:pt-28">
+
+    <!-- ===== HERO ===== -->
+    <section id="hero" class="max-w-7xl mx-auto px-6 md:px-10 py-6 md:py-12 flex flex-col lg:flex-row items-center gap-12">
+      <div class="flex-1 space-y-6 fade-up visible">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-[1.1] font-bold tracking-tight">
+          Your story.<br />
+          <span class="text-gold">Your style.</span>
+        </h1>
+        <p class="text-lg md:text-xl text-[#4b4b4b] max-w-lg">SagaLeor builds your unique Fashion Identity using AI — so every recommendation, every day, is truly you.</p>
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a href="#cta" class="bg-black text-white px-8 py-3.5 rounded-full font-medium hover:bg-gold hover:text-black transition-all ripple-btn">Get Started Free</a>
+          <a href="#how-it-works" class="border border-black/20 px-8 py-3.5 rounded-full font-medium hover:border-gold hover:text-gold transition">See How it Works</a>
+        </div>
+        <div class="flex items-center gap-4 pt-4">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/40?img=1" alt="user" class="w-10 h-10 rounded-full border-2 border-white" />
+            <img src="https://i.pravatar.cc/40?img=2" alt="user" class="w-10 h-10 rounded-full border-2 border-white" />
+            <img src="https://i.pravatar.cc/40?img=3" alt="user" class="w-10 h-10 rounded-full border-2 border-white" />
+            <span class="w-10 h-10 rounded-full bg-gold/20 text-gold flex items-center justify-center text-sm font-bold border-2 border-white">+</span>
+          </div>
+          <span class="text-sm text-[#4b4b4b]">Trusted by <strong class="text-black">250,000+</strong> users</span>
+        </div>
+      </div>
+      <!-- right side: model + floating cards -->
+      <div class="flex-1 relative flex justify-center">
+        <div class="relative w-full max-w-md">
+          <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&h=600&fit=crop&crop=face" alt="fashion model" class="rounded-3xl shadow-2xl w-full object-cover aspect-square" loading="lazy" />
+          <!-- floating glass card -->
+          <div class="absolute -bottom-6 -left-6 md:-left-10 glass-card rounded-2xl p-4 w-52 shadow-lg floating">
+            <div class="flex justify-between text-xs font-medium"><span>Face Analysis</span> <span class="text-gold">98%</span></div>
+            <div class="flex justify-between text-xs font-medium"><span>Body Analysis</span> <span class="text-gold">96%</span></div>
+            <div class="flex justify-between text-xs font-medium"><span>Style Preference</span> <span class="text-gold">95%</span></div>
+            <div class="mt-2 pt-2 border-t border-black/10 flex justify-between font-bold"><span>Overall Match</span> <span class="text-gold">96%</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section id="features" class="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-24">
+      <div class="text-center mb-14 fade-up">
+        <span class="text-gold font-semibold text-sm tracking-widest uppercase">Intelligence behind every recommendation</span>
+        <h2 class="text-3xl md:text-5xl font-serif font-bold mt-2">AI Style Identity</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">🧠</div>
+          <h3 class="text-xl font-bold">AI Style Identity</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">Deep analysis of you to build a permanent style DNA that evolves.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">✨</div>
+          <h3 class="text-xl font-bold">Smart Recommendations</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">Outfits, hairstyles, colors, accessories — perfectly personalized.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">👗</div>
+          <h3 class="text-xl font-bold">Wardrobe Intelligence</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">Organize, optimize and get more out of what you already own.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">📅</div>
+          <h3 class="text-xl font-bold">Occasion Planning</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">Be ready for any event with the perfect look planned in advance.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">🛍️</div>
+          <h3 class="text-xl font-bold">Shop Smarter</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">Curated picks from top brands that truly suit your style.</p>
+        </div>
+        <div class="bg-white rounded-3xl p-7 shadow-sm card-lift border border-white/30 fade-up">
+          <div class="w-12 h-12 rounded-full bg-black/5 flex items-center justify-center text-2xl mb-4">🔄</div>
+          <h3 class="text-xl font-bold">Continuous Learning</h3>
+          <p class="text-[#4b4b4b] mt-2 text-sm leading-relaxed">The more you use it, the smarter and more accurate it gets.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section id="how-it-works" class="bg-white/40 py-16 md:py-24">
+      <div class="max-w-7xl mx-auto px-6 md:px-10">
+        <h2 class="text-3xl md:text-5xl font-serif font-bold text-center mb-4">How SagaLeor Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-12">
+          <div class="text-center fade-up"><span class="inline-block text-4xl font-serif text-gold mb-2">01</span><h4 class="font-bold text-xl">Upload Photos</h4><p class="text-sm text-[#4b4b4b]">Upload photos and answer a few simple questions.</p></div>
+          <div class="text-center fade-up"><span class="inline-block text-4xl font-serif text-gold mb-2">02</span><h4 class="font-bold text-xl">AI Analysis</h4><p class="text-sm text-[#4b4b4b]">Our AI analyzes your face, body, colors and style preferences.</p></div>
+          <div class="text-center fade-up"><span class="inline-block text-4xl font-serif text-gold mb-2">03</span><h4 class="font-bold text-xl">Your Identity</h4><p class="text-sm text-[#4b4b4b]">We build your unique Fashion Identity that represents you.</p></div>
+          <div class="text-center fade-up"><span class="inline-block text-4xl font-serif text-gold mb-2">04</span><h4 class="font-bold text-xl">You Shine</h4><p class="text-sm text-[#4b4b4b]">Get daily recommendations that make you look and feel your best.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS + BRANDS ===== -->
+    <section class="max-w-7xl mx-auto px-6 md:px-10 py-16">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div><span class="text-4xl font-bold counter" data-target="250">250</span><span class="text-4xl font-bold">K+</span><p class="text-sm text-[#4b4b4b]">Happy Users</p></div>
+        <div><span class="text-4xl font-bold counter" data-target="4.8">4.8</span><p class="text-sm text-[#4b4b4b]">Average Rating</p></div>
+        <div><span class="text-4xl font-bold counter" data-target="50">50</span><span class="text-4xl font-bold">M+</span><p class="text-sm text-[#4b4b4b]">Outfits Generated</p></div>
+        <div><span class="text-4xl font-bold counter" data-target="98">98</span><span class="text-4xl font-bold">%</span><p class="text-sm text-[#4b4b4b]">Satisfaction Rate</p></div>
+      </div>
+      <!-- brand logos grayscale -->
+      <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14 mt-16 opacity-60 hover:opacity-100 transition">
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">VOGUE</span>
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">GQ</span>
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">Forbes</span>
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">HYPEBEAST</span>
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">Esquire</span>
+        <span class="text-2xl font-serif font-bold text-[#2a2a2a]">INSIDER</span>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section id="cta" class="max-w-7xl mx-auto px-6 md:px-10 py-16 md:py-24">
+      <div class="bg-black rounded-4xl p-10 md:p-16 text-white flex flex-col md:flex-row items-center justify-between gap-10">
+        <div><h2 class="text-3xl md:text-5xl font-serif font-bold">Ready to build your <br />Fashion Identity?</h2><p class="text-white/70 mt-3 max-w-md">Join SagaLeor today and start your journey to style that’s uniquely, unmistakably you.</p><a href="#" class="inline-block mt-6 bg-gold text-black px-10 py-4 rounded-full font-medium hover:bg-white transition">Get Started Free</a></div>
+        <div class="w-48 h-48 bg-gold/20 rounded-full flex items-center justify-center text-7xl">✨</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-[#f1f0ec] py-12 px-6 md:px-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-8">
+      <div class="col-span-2 md:col-span-1"><span class="text-2xl font-serif font-bold">SagaLeor</span><p class="text-xs text-[#4b4b4b] mt-2">AI Fashion Identity OS</p></div>
+      <div><h5 class="font-bold text-sm">Product</h5><ul class="text-sm text-[#4b4b4b] space-y-1 mt-2"><li>Features</li><li>How it Works</li><li>Pricing</li></ul></div>
+      <div><h5 class="font-bold text-sm">Company</h5><ul class="text-sm text-[#4b4b4b] space-y-1 mt-2"><li>About</li><li>Press</li><li>Contact</li></ul></div>
+      <div><h5 class="font-bold text-sm">Support</h5><ul class="text-sm text-[#4b4b4b] space-y-1 mt-2"><li>Help Center</li><li>Privacy Policy</li><li>Terms</li></ul></div>
+      <div class="col-span-2 md:col-span-1"><h5 class="font-bold text-sm">Download</h5><div class="flex gap-3 mt-2"><span class="bg-black/10 px-3 py-1 rounded-full text-xs">App Store</span><span class="bg-black/10 px-3 py-1 rounded-full text-xs">Google Play</span></div></div>
+    </div>
+    <div class="max-w-7xl mx-auto border-t border-black/10 mt-8 pt-6 text-sm text-[#4b4b4b] flex flex-wrap justify-between"><span>© 2026 SagaLeor. All rights reserved.</span><span class="flex gap-4"><span>Twitter</span><span>Instagram</span><span>YouTube</span></span></div>
+  </footer>
+
+  <!-- back to top -->
+  <button id="backTop" class="fixed bottom-8 right-8 bg-black text-white w-12 h-12 rounded-full shadow-lg hover:bg-gold hover:text-black transition-all text-xl hidden">↑</button>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ===== mobile menu =====
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileMenu = document.getElementById('mobileMenu');
+      menuToggle?.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+
+      // ===== navbar scroll =====
+      const navbar = document.getElementById('navbar');
+      let lastScroll = 0;
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (y > 40) navbar.classList.add('nav-solid');
+        else navbar.classList.remove('nav-solid');
+        // back to top
+        const btn = document.getElementById('backTop');
+        if (y > 500) btn.classList.remove('hidden');
+        else btn.classList.add('hidden');
+      });
+
+      // ===== back to top =====
+      document.getElementById('backTop')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      // ===== fade-up observer =====
+      const fadeElements = document.querySelectorAll('.fade-up, .scale-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.2 });
+      fadeElements.forEach(el => observer.observe(el));
+
+      // ===== counter animation =====
+      const counters = document.querySelectorAll('.counter');
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = parseFloat(el.dataset.target);
+            if (isNaN(target)) return;
+            let current = 0;
+            const step = target / 40;
+            const interval = setInterval(() => {
+              current += step;
+              if (current >= target) { el.textContent = target; clearInterval(interval); }
+              else el.textContent = Math.floor(current);
+            }, 25);
+            counterObserver.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      counters.forEach(c => counterObserver.observe(c));
+
+      // ===== ripple effect on buttons (demo) =====
+      document.querySelectorAll('.ripple-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          const rect = this.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const ripple = document.createElement('span');
+          ripple.style.cssText = `position:absolute; border-radius:50%; background:rgba(255,255,255,0.6); width:40px; height:40px; left:${x-20}px; top:${y-20}px; transform:scale(0); animation: rippleAnim 0.6s ease-out; pointer-events:none;`;
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
+        });
+      });
+      // inject keyframes for ripple
+      const styleSheet = document.createElement("style");
+      styleSheet.textContent = `@keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }`;
+      document.head.appendChild(styleSheet);
+
+      // close mobile menu on link click
+      document.querySelectorAll('#mobileMenu a').forEach(link => {
+        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+      });
+
+      console.log('✨ SagaLeor · premium AI fashion');
+    })();
+  </script>
+</body>
+</html>
